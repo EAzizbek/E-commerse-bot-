@@ -21,3 +21,15 @@ class Database:
         await self.pool.execute(
             query, telegram_id, name, surename, int(age), phone
         )
+    async def is_user_exists(self, telegram_id: int) -> bool:
+        query = """
+        SELECT EXISTS (
+        SELECT 1 FROM users WHERE telegram_id = $1
+        );
+        """
+        return await self.pool.fetchval(query, telegram_id)
+    async def user_profile(self,telegram_id):
+        query="""
+        select name,age,phone,role from users where telegram_id=$1;
+        """
+        return await self.pool.fetchrow(query,telegram_id)
