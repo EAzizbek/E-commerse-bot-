@@ -42,4 +42,3 @@ async def register_handler(msg:Message,state:FSMContext,db):
     await msg.answer("Siz muvafaqqiyatli ro'yxatdan o'tdingiz!",reply_markup=ReplyKeyboardRemove())
 
     await state.clear()
-

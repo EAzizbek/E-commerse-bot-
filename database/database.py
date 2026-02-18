@@ -28,8 +28,14 @@ class Database:
         );
         """
         return await self.pool.fetchval(query, telegram_id)
+    
+
     async def user_profile(self,telegram_id):
         query="""
         select name,age,phone,role from users where telegram_id=$1;
         """
         return await self.pool.fetchrow(query,telegram_id)
+    
+    async def get_user_role(self, telegram_id):
+        query = "SELECT role FROM users WHERE telegram_id=$1"
+        return await self.pool.fetchval(query, telegram_id)
