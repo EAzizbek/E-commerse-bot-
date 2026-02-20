@@ -39,3 +39,17 @@ class Database:
     async def get_user_role(self, telegram_id):
         query = "SELECT role FROM users WHERE telegram_id=$1"
         return await self.pool.fetchval(query, telegram_id)
+    
+    async def get_users(self):
+        query = "SELECT telegram_id, name, role FROM users ORDER BY id"
+        return await self.pool.fetch(query)
+    
+    async def set_user_role(self, telegram_id, role):
+        query = "UPDATE users SET role=$1 WHERE telegram_id=$2"
+        await self.pool.execute(query, role, telegram_id)
+
+    #Products
+
+    async def get_products(self):
+        query = "SELECT * FROM products WHERE is_active=TRUE"
+        return await self.pool.fetch(query)
