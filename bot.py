@@ -7,6 +7,7 @@ from handlers.register import router as register_router
 from handlers.user.profile import router as profile_router
 from handlers.admin.admin import router as admin_panel_router
 from handlers.user.products import router as products_router
+from handlers.admin.product import router as admin_product_router
 from database.database import Database
 
 
@@ -26,6 +27,7 @@ async def main():
     dp.include_router(profile_router)
     dp.include_router(admin_panel_router)
     dp.include_router(products_router)
+    dp.include_router(admin_product_router)
 
     await dp.start_polling(bot)
 

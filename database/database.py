@@ -53,3 +53,7 @@ class Database:
     async def get_products(self):
         query = "SELECT * FROM products WHERE is_active=TRUE"
         return await self.pool.fetch(query)
+    
+    async def add_product(self,name,price,description):
+        query=""" INSERT INTO products(name,price,description) VALUES($1,$2,$3)"""
+        await self.pool.execute(query,name,int(price),description)
