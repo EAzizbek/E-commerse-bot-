@@ -44,4 +44,11 @@ def products_inline(products):
 
     return InlineKeyboardMarkup(inline_keyboard=keyboard)
 
+def inline_action(product_id):
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="Edit",callback_data=f"edit_product_{product_id}"),InlineKeyboardButton(text="Delete",callback_data=f"delete_product_{product_id}")]
+        ]
+    )
+
 
