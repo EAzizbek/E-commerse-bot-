@@ -51,4 +51,29 @@ def inline_action(product_id):
         ]
     )
 
+def cart_keyboard(products):
+
+    keyboard = []
+
+    for product in products:
+        keyboard.append([
+            InlineKeyboardButton(
+                text=f"{product['name']} - {product['price']} so'm",
+                callback_data=f"product_{product['id']}"
+            ),
+            InlineKeyboardButton(
+                text="❌",
+                callback_data=f"remove_{product['id']}"
+            )
+        ])
+
+    keyboard.append([
+        InlineKeyboardButton(
+            text="✅ Buyurtma berish",
+            callback_data="checkout"
+        )
+    ])
+
+    return InlineKeyboardMarkup(inline_keyboard=keyboard)
+
 
