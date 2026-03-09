@@ -1,6 +1,6 @@
 from aiogram import F,Router
 from aiogram.types import Message,CallbackQuery
-from keyboards.inline import products_inline,cart_keyboard
+from keyboards.inline import products_inline,cart_keyboard,payment_keyboard
 from filters.filter import RoleFilter
 
 router=Router()
@@ -35,4 +35,57 @@ async def show_cart(message: Message,db):
     await message.answer(
         "Savatchangiz:",
         reply_markup=cart_keyboard(products)
+    )
+
+@router.callback_query(F.data.startswith("remove_"))
+async def rm_product(call:CallbackQuery,db):
+    product_id=int(call.data.split("_")[1])
+    user_id = await db.get_user_id(call.from_user.id)
+
+    await db.remove_one_product(user_id,product_id)
+
+    products = await db.get_cart_products(user_id)
+    await call.message.answer("Savatchangiz:",
+        reply_markup=cart_keyboard(products))
+    await call.answer()
+
+
+@router.callback_query(F.data == "checkout")
+async def checkout(call: CallbackQuery,db):
+    user_id = await db.get_user_id(call.from_user.id)
+    products, total = await db.get_cart_with_total(user_id)
+
+    if not products:
+        await call.message.answer("Savatchangiz bo'sh")
+        return
+
+    text = "🛒 Buyurtmangiz:\n\n"
+
+    for product in products:
+        text += f"• {product['name']} - {product['price']} so'm\n"
+
+    text += f"\n💰 Umumiy narx: {total} so'm"
+
+    await call.message.answer(
+        text,
+        reply_markup=payment_keyboard()
+    )
+
+@router.callback_query(F.data == "pay_card")
+async def pay_card(call: CallbackQuery):
+
+    await call.message.answer(
+        "💳 To'lov uchun karta:\n"
+        "8600 1234 5678 9012\n\n"
+        "To'lov qilgandan keyin chek yuboring."
+    )
+
+@router.callback_query(F.data == "pay_cash")
+async def pay_cash(call: CallbackQuery,db):
+
+    # await db.confirm_order(call.from_user.id)
+
+    await call.message.answer(
+        "✅ Buyurtmangiz qabul qilindi!\n"
+        "Courier yetkazib berganda naqd to'laysiz."
     )

@@ -76,4 +76,23 @@ def cart_keyboard(products):
 
     return InlineKeyboardMarkup(inline_keyboard=keyboard)
 
+def payment_keyboard():
+
+    keyboard = [
+        [
+            InlineKeyboardButton(
+                text="💳 Karta orqali to'lov",
+                callback_data="pay_card"
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                text="💵 Naqd to'lov",
+                callback_data="pay_cash"
+            )
+        ]
+    ]
+
+    return InlineKeyboardMarkup(inline_keyboard=keyboard)
+
 

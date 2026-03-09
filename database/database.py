@@ -126,3 +126,49 @@ class Database:
             """,
             user_id
         )
+
+    
+    async def remove_one_product(self, user_id, product_id):
+
+        await self.pool.execute(
+            """
+            DELETE FROM order_items
+            WHERE id = (
+                SELECT oi.id
+                FROM order_items oi
+                JOIN orders o ON oi.order_id=o.id
+                WHERE o.user_id=$1
+                AND o.order_status='cart'
+                AND oi.product_id=$2
+                LIMIT 1
+            )
+            """,
+            user_id,
+            product_id
+        )
+    
+    async def get_cart_with_total(self, user_id):
+
+        products = await self.pool.fetch(
+            """
+            SELECT p.id, p.name, p.price
+            FROM order_items oi
+            JOIN orders o ON oi.order_id=o.id
+            JOIN products p ON oi.product_id=p.id
+            WHERE o.user_id=$1 AND o.order_status='cart'
+            """,
+            user_id
+        )
+
+        total = await self.pool.fetchval(
+            """
+            SELECT SUM(p.price)
+            FROM order_items oi
+            JOIN orders o ON oi.order_id=o.id
+            JOIN products p ON oi.product_id=p.id
+            WHERE o.user_id=$1 AND o.order_status='cart'
+            """,
+            user_id
+        )
+
+        return products, total
