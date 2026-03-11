@@ -2,7 +2,6 @@ from aiogram import F,Router
 from aiogram.types import Message,CallbackQuery
 from keyboards.inline import products_inline,cart_keyboard,payment_keyboard
 from filters.filter import RoleFilter
-
 router=Router()
 
 @router.message(lambda msg: msg.text == "Mahsulotlar")
@@ -79,6 +78,7 @@ async def pay_card(call: CallbackQuery):
         "8600 1234 5678 9012\n\n"
         "To'lov qilgandan keyin chek yuboring."
     )
+
 
 @router.callback_query(F.data == "pay_cash")
 async def pay_cash(call: CallbackQuery,db):

@@ -44,6 +44,10 @@ class Database:
         query = "SELECT telegram_id, name, role FROM users ORDER BY id"
         return await self.pool.fetch(query)
     
+    async def get_users_telegram_id(self):
+        query = "SELECT telegram_id FROM users ORDER BY id"
+        return await self.pool.fetch(query)
+    
     async def set_user_role(self, telegram_id, role):
         query = "UPDATE users SET role=$1 WHERE telegram_id=$2"
         await self.pool.execute(query, role, telegram_id)
@@ -172,3 +176,4 @@ class Database:
         )
 
         return products, total
+    
